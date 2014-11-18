@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <TextView
+        android:id="@+id/tv_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/heading"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/edt_masjidName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_heading"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="@string/masjid_name" />
+
+    <Button
+        android:id="@+id/btn_getCurrentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_masjidName"
+        android:layout_centerHorizontal="true"
+        android:text="@string/get_current_location" />
+
+    <TextView
+        android:id="@+id/tv_namazTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_getCurrentLocation"
+        android:layout_centerHorizontal="true"
+        android:text="@string/time_of_namaz_e_jumaa"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TimePicker
+        android:id="@+id/tp_namazTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_namazTime"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/tv_masjidImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tp_namazTime"
+        android:layout_centerHorizontal="true"
+        android:text="@string/masjid_image"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ImageView
+        android:id="@+id/img_masjidImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/tv_masjidImage"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/masjid_image"
+        android:src="@android:drawable/btn_star" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/img_masjidImage"
+        android:layout_centerHorizontal="true"
+        android:onClick="saveData"
+        android:text="@string/save" />
+
+</RelativeLayout>
