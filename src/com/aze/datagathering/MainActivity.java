@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.parse.ParseAnalytics;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.starter.R;
 
 public class MainActivity extends Activity implements LocationListener {
 
