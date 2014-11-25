@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.parse.ParseAnalytics;
 import com.parse.ParseFile;
@@ -40,6 +42,8 @@ public class MainActivity extends Activity implements LocationListener {
 	private int mMasjidTimeHour = -1;
 	private int mMasjidTimeMinutes = -1;
 	private byte[] image;
+	private AlertDialog.Builder builder;
+	private AlertDialog alert;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class MainActivity extends Activity implements LocationListener {
 		setContentView(R.layout.activity_main_old);
 
 		ParseAnalytics.trackAppOpenedInBackground(getIntent());
+
+		locationValidation();
 
 		edt_masjidName = (EditText) findViewById(R.id.edt_masjidName);
 		tp_namazTime = (TimePicker) findViewById(R.id.tp_namazTime);
@@ -58,8 +64,47 @@ public class MainActivity extends Activity implements LocationListener {
 		btn_getCurrentLocation.setOnClickListener(mClickListener);
 		img_masjidImage.setOnClickListener(mClickListener);
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (alert != null && alert.isShowing())
+			alert.dismiss();
+
+		locationValidation();
+	}
+
+	public void locationValidation() {
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+			Criteria criteria = new Criteria();
+			String bestProvider = locationManager.getBestProvider(criteria, false);
+			Location location = locationManager.getLastKnownLocation(bestProvider);
+			latitude = String.valueOf(location.getLatitude());
+			longitude = String.valueOf(location.getLongitude());
+		} else {
+			buildAlertMessageNoGps();
+		}
+	}
+
+	private void buildAlertMessageNoGps() {
+		builder = new AlertDialog.Builder(this);
+		builder.setMessage("Your GPS seems to be disabled,\nplease enable!").setCancelable(false)
+				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+					}
+				});
+		// .setNegativeButton("No", new DialogInterface.OnClickListener() {
+		// public void onClick(final DialogInterface dialog, final int id) {
+		// dialog.cancel();
+		// }
+		// });
+		alert = builder.create();
+		alert.show();
 	}
 
 	OnClickListener mClickListener = new OnClickListener() {
@@ -74,10 +119,14 @@ public class MainActivity extends Activity implements LocationListener {
 				mMasjidTimeHour = tp_namazTime.getCurrentHour();
 				mMasjidTimeMinutes = tp_namazTime.getCurrentMinute();
 
-				if (image == null)
-					showDialog();
-				else
-					UploadData();
+				if (mMasjidName.equalsIgnoreCase("")) {
+					Toast.makeText(getApplicationContext(), "Please enter Masjid name", Toast.LENGTH_LONG).show();
+				} else {
+					if (image == null)
+						showDialog();
+					else
+						UploadData();
+				}
 				break;
 
 			case R.id.img_masjidImage:
@@ -132,26 +181,6 @@ public class MainActivity extends Activity implements LocationListener {
 
 			// Create the class and the columns
 			mParseObject.saveInBackground();
-
-			// // Create the ParseFile
-			// ParseFile file = new ParseFile("ic_launcher.png", image);
-			// // Upload the image into Parse Cloud
-			// file.saveInBackground();
-			//
-			// // Create a New Class called "ImageUpload" in Parse
-			// ParseObject imgupload = new ParseObject("Masjid");
-			//
-			// // Create a column named "ImageName" and set the string
-			// imgupload.put("masjid_name", "mMasjidName");
-			// imgupload.put("lat", "23.00000");
-			// imgupload.put("long", "54.00000");
-			// imgupload.put("time", mMasjidTimeHour + ":" + mMasjidTimeMinutes);
-			//
-			// // Create a column named "ImageFile" and insert the image
-			// imgupload.put("image", file);
-			//
-			// // Create the class and the columns
-			// imgupload.saveInBackground();
 
 		} catch (Exception e) {
 			e.printStackTrace();
