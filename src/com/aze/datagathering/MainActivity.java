@@ -77,16 +77,20 @@ public class MainActivity extends Activity implements LocationListener {
 	}
 
 	public void locationValidation() {
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-			Criteria criteria = new Criteria();
-			String bestProvider = locationManager.getBestProvider(criteria, false);
-			Location location = locationManager.getLastKnownLocation(bestProvider);
-			latitude = String.valueOf(location.getLatitude());
-			longitude = String.valueOf(location.getLongitude());
-		} else {
-			buildAlertMessageNoGps();
+		try {
+			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+				Criteria criteria = new Criteria();
+				String bestProvider = locationManager.getBestProvider(criteria, false);
+				Location location = locationManager.getLastKnownLocation(bestProvider);
+				latitude = String.valueOf(location.getLatitude());
+				longitude = String.valueOf(location.getLongitude());
+			} else {
+				buildAlertMessageNoGps();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
