@@ -6,7 +6,7 @@
     <string name="heading">Masjid Details</string>
     <string name="masjid_name">Enter Masjid\'s Name</string>
     <string name="get_current_location">Get Current Location</string>
-    <string name="time_of_namaz_e_jumaa">Time of Namaz-e-Jumaa</string>
+    <string name="time_of_namaz_e_jumaa">Time of Khutb-e-Jumaa</string>
     <string name="masjid_image">Masjid\'s Image</string>
     <string name="save">Save</string>
     <string name="upload_data">Upload Data</string>
